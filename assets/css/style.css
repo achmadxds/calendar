@@ -1,0 +1,45 @@
+.weekend {
+	color: #F99;
+}
+
+.dot {
+	background-image: radial-gradient(#212121 20%, #e53935 20%);
+	height: 100px;
+	width: 100px;
+}
+
+.holiday {
+	color: #f33;
+	cursor: pointer;
+}
+
+.ordinary {
+	cursor: pointer;
+}
+
+.note_red,
+.note_blue {
+	position: relative;
+	cursor: pointer;
+}
+
+.note_red:after,
+.note_blue:after {
+	content: "";
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 0;
+	height: 0;
+	display: block;
+	border-left: 10px solid transparent;
+	border-bottom: 10px solid transparent;
+}
+
+.note_red:after {
+	border-top: 10px solid #F00;
+}
+
+.note_blue:after {
+	border-top: 10px solid #00F;
+}

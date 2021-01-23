@@ -69,23 +69,20 @@ foreach ($holiday_esp_value as $value) {
 	}
 }
 
-function GetFirstNote(){
-	$notes       		   = [];
-	$notesvalue        = query('SELECT `nt`.`date_holiday`, 
-		`us`.`name`, 
-		`nt`.`note`
-		FROM `notes` as `nt` LEFT JOIN `user` as `us` 
-		ON `nt`.`user_id` = `us`.`id` ');
-	foreach ($notesvalue as $value) {
-		if (!array_key_exists($value['date_holiday'],$notes))
-		{
-			$notes[$value['date_holiday']] =  '<b>' .$value['name']. '</b> : ' . $value['note'];
-		}
-		else {
-			$notes[$value['date_holiday']] =  $notes[$value['date_holiday']] . '<br><b>' .$value['name']. '</b> : ' . $value['note'];	
-		}
+$notes       		   = [];
+$notesvalue        = query('SELECT `nt`.`date_holiday`, 
+	`us`.`name`, 
+	`nt`.`note`
+	FROM `notes` as `nt` LEFT JOIN `user` as `us` 
+	ON `nt`.`user_id` = `us`.`id` ');
+foreach ($notesvalue as $value) {
+	if (!array_key_exists($value['date_holiday'],$notes))
+	{
+		$notes[$value['date_holiday']] =  '<b>' .$value['name']. '</b> : ' . $value['note'];
 	}
-	return $notes;
+	else {
+		$notes[$value['date_holiday']] =  $notes[$value['date_holiday']] . '<br><b>' .$value['name']. '</b> : ' . $value['note'];	
+	}
 }
 
 function DeleteNotes() {
@@ -180,7 +177,6 @@ if(isset($_POST['task'])){
 		break;
 
 		case 'deleteNote':
-		$returnable = DeleteNotes();
 		header('Content-Type: application/json');
 		$returnable = json_encode($returnable);
 		echo $returnable;
@@ -188,13 +184,6 @@ if(isset($_POST['task'])){
 
 		case 'updateNote':
 		UpdateNotes();
-		break;
-
-		case 'getFirstNote':
-		$thedata = GetFirstNote();
-		$thedata = json_encode($thedata);
-		header('Content-Type: application/json');
-		echo $thedata;
 		break;
 	}
 	exit;
@@ -255,7 +244,7 @@ if(isset($_POST['task'])){
 									$is_holiday_esp = in_array($date, array_keys($holiday_esp)) ? ' note_red' : '';
 									$date_color     = $is_holiday ? ' holiday' : ' ordinary';
 									$is_flag        = !empty($notes[$date]) ? ' note_blue' : '';
-									$date_note      = $is_flag ? ' data-toggle="popover" data-container="body" data-placement="top" data-html="true" data-trigger="hover" data-content="" data-id="'.$date.'" '
+									$date_note      = $is_flag ? ' data-toggle="popover" data-container="body" data-placement="top" data-html="true" data-trigger="hover" data-content="' . $notes[$date] . '" data-id="'.$date.'" '
 									: ($is_holiday ? ' data-toggle="popover" data-container="body" data-placement="top" data-html="true" data-trigger="hover" data-content="' . $holiday[$date] . '" data-id="'.$date.'" '
 										: ($is_holiday_esp ? ' data-toggle="popover" data-container="body" data-placement="top" data-html="true" data-trigger="hover" data-content="' . $holiday_esp[$date] . '" data-id="'.$date.'" '
 											: ' data-toggle="popover" data-container="body" data-placement="top" data-html="true" data-trigger="hover" data-id="'.$date.'"'));

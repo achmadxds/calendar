@@ -1,4 +1,10 @@
 $(document).ready(function() {
+	GetFirstNote();
+
+	$("#addNotes").on('hide.bs.modal', function(){
+		GetFirstNote();
+	});
+
 	$(function () {
 		$('[data-toggle="tooltip"]').tooltip()
 	})
@@ -15,38 +21,8 @@ $(document).ready(function() {
 		var values = $(this).data("id");
 		$("#date").val(values);
 
-		$.ajax({ 
-			type: "POST", 
-			data : {task : "datess", date : values} , 
-			success: function(data) {
-				var outerdiv = $(".getnotefromdate1");
-				outerdiv.empty();
-				$.each(data['payload'], function(i, val){
-					outerdiv.append(
-						`
-						<div class="dropdown">
-						<label id="namaorang"> ${val['name']} </label>
-						
-						<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-						<span class="caret"></span>
-						</button>
-
-						<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-						<li role="presentation"><a tabindex="-1" onclick="DeleteData(${val['id']})" >Delete</a></li>
-						<li role="presentation"><a tabindex="-1" onclick="UpdateData(${val['id']})">Update</a></li>
-						</ul>
-
-						</div>
-						<input type="text" id="inputText" class="form-control" value="${val['note']}" readonly>
-						<div id="saveButton" name="saveButton" style="display : none">
-							<button type="button" class="btn btn-success updateNote">Save</button>
-						</div>
-						<hr>
-						`
-						);
-				});
-			}
-		});
+		ShowDataModalNote(values);
+		
 	});
 
 	$(".clickable").bind("contextmenu" ,function(e) {
@@ -69,13 +45,12 @@ $(document).ready(function() {
 				});
 			}, 
 			error: function(textStatus) {
-				console.log(textStatus);
 			}
 		});
 	});
 
 	$("#saveNotes").click(function(){
-		var dateraw = $("#date").val();
+		var dateraw 	= $("#date").val();
 		var nameCSraw = $("#nameCS").val();
 		var alasanraw = $("#alasan").val();
 		if(dateraw != null && nameCSraw != null && alasanraw != ""){
@@ -102,23 +77,88 @@ $(document).ready(function() {
 			});
 		}
 	});
-
-	$(document).on("click", ".updateNote", function() {
-		
-	});
 });
 
-function DeleteData(id) {
+function DeleteNote(id) {
+	var values = $('#group-' + id + ' .input-date').val();
+
 	$.ajax({
 		type : "POST",
-		data : {task : "deleteData", idDel : id} , 
+		data : {task : "deleteNote", idDel : id} , 
 		success : function(data){
-			alert("Terhapus");
+			ShowDataModalNote(values);
 		}
 	});
 }
 
-function UpdateData(id) {
-	var style = $('[name=saveButton]');
-	style.style.display = 'block';
+function ShowButton(id) {
+	$('#group-' + id + ' .input-text').attr("readonly", false);
+	$('#group-' + id + ' .save-button').css("display", "block");
+}
+
+function UpdateNotes(id) {
+	var note 	 = $('#group-' + id + ' .input-text').val();
+	var values = $('#group-' + id + ' .input-date').val();
+
+	$.ajax({
+		type : "POST",
+		data : {task : "updateNote", idUpdate : id, noteUpdate : note},
+		success : function(data) {
+			ShowDataModalNote(values);
+		}
+	});
+}
+var temp = [];
+function GetFirstNote()	{
+	$.ajax({
+		type : "POST",
+		data : {task : "getFirstNote"},
+		success : function(data) {
+			$.each(data, function(i, val){
+				if(temp.includes(i)){
+					console.log("BWA BAW");
+				}
+				$('[data-id="'+i+'"]').parent().addClass("note_blue");
+				$('[data-id="'+i+'"]').attr("data-content", val);
+				temp.push(i);
+			});
+		}
+	});
+}
+
+function ShowDataModalNote(values){
+	$.ajax({ 
+		type: "POST", 
+		data : {task : "datess", date : values} , 
+		success: function(data) {
+			var outerdiv = $(".getnotefromdate1");
+			outerdiv.empty();
+			$.each(data['payload'], function(i, val){
+				outerdiv.append(
+					`
+					<div class="dropdown" id="group-${val['id']}">
+					<label id="namaorang"> ${val['name']} </label>
+
+					<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+					<span class="caret"></span>
+					</button>
+
+					<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+					<li role="presentation"><a tabindex="-1" onclick="DeleteNote(${val['id']})" >Delete</a></li>
+					<li role="presentation"><a tabindex="-1" onclick="ShowButton(${val['id']})">Update</a></li>
+					<input type="hidden" class="input-date" value="${val['date_holiday']}">
+					</ul>
+
+					<input type="text" class="form-control input-text" value="${val['note']}" readonly>
+					<div class="save-button" style="display : none">
+					<button type="button" class="btn btn-success updateNote" onclick="UpdateNotes(${val['id']})">Save</button>
+					</div>
+
+					</div>
+					<hr>
+					`
+					);
+			});
+		}
+	});
 }

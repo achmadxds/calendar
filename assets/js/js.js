@@ -141,7 +141,7 @@ function GetFirstNote()	{
 			$.each(data, function(i, val){
 				$('[data-id="'+i+'"]').parent().addClass("note_blue");
 				$('[data-id="'+i+'"]').attr("data-content", val);
-				$('[data-id="'+i+'"]').parent().append(` <span class="dot"></span> `);
+				$('[data-id="'+i+'"]').parent().append(` <span class="dot" data-toggle="popover" data-container="body" data-placement="top" data-html="true" data-trigger="hover" data-content="${val}" >  </span> `);
 			});
 		}
 	});

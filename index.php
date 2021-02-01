@@ -310,7 +310,7 @@
 												: ' data-toggle="popover" data-container="body" data-placement="top" data-html="true" data-trigger="hover" data-id="'.$date.'"'));
 												?>
 												<td class="<?php echo $is_weekend . $is_flag . $is_holiday_esp ?>">
-													<span class="clickable dates<?php echo $date_color ?>" <?php echo $date_note ?>><?php echo date('j', strtotime($date)) ?></span>
+													<span class="clickable dates<?php echo $date_color ?>" <?php echo $date_note ?>> <?php echo date('j', strtotime($date)) ?> </span>
 													<br>
 												</td>
 												<?php

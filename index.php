@@ -304,13 +304,14 @@
 										$is_holiday_esp                = !empty($holiday_esp[$date]) ? ' note_red' : '';
 										$date_color                    = $is_holiday ? ' holiday' : ' ordinary';
 										$is_flag                       = !empty($notes[$date]) ? ' note_blue' : '';
-										$date_note                     = $is_flag ? ' data-toggle="popover" data-container="body" data-placement="top" data-html="true" data-trigger="hover" data-content="" data-id="'.$date.'" '
-										: ($is_holiday ? ' data-toggle = "popover" data-container="body" data-placement="top" data-html="true" data-trigger="hover" data-content="' . $holiday[$date] . '" data-id="'.$date.'" '
-											: ($is_holiday_esp ? ' data-toggle="popover" data-container="body" data-placement="top" data-html="true" data-trigger="hover" data-content="" data-id="'.$date.'" '
+										$date_note                     = $is_flag ? ' data-toggle="popover" data-container="body" data-placement="top" data-html="true" data-trigger="hover" data-content="" data-id="" '
+										: ($is_holiday ? ' data-toggle = "popover" data-container="body" data-placement="top" data-html="true" data-trigger="hover" data-content="' . $holiday[$date] . '" data-id="" '
+											: ($is_holiday_esp ? ' data-toggle="popover" data-container="body" data-placement="top" data-html="true" data-trigger="hover" data-content="" data-id="" '
 												: ' data-toggle="popover" data-container="body" data-placement="top" data-html="true" data-trigger="hover" data-id="'.$date.'"'));
 												?>
 												<td class="<?php echo $is_weekend . $is_flag . $is_holiday_esp ?>">
 													<span class="clickable dates<?php echo $date_color ?>" <?php echo $date_note ?>><?php echo date('j', strtotime($date)) ?></span>
+													<br>
 												</td>
 												<?php
 											}

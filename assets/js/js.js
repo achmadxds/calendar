@@ -70,6 +70,10 @@ function DeleteNote(id) {
 		success : function(data){
 			GetFirstNote();
 			ShowDataModalNote(values);
+			//Hanya Karena The Last cant gone from this freking code
+			// setTimeout(function () {
+			// 	history.go(0);
+			// }, 500);
 		}
 	});
 }
@@ -83,6 +87,10 @@ function DeleteHolidayESP(id) {
 		success : function(data){
 			GetFirstHesp();
 			ShowDataModalESP(values);
+			//Hanya Karena The Last cant gone from this freking code
+			// setTimeout(function () {
+			// 	history.go(0);
+			// }, 500);
 		}
 	});
 }
@@ -133,6 +141,7 @@ function GetFirstNote()	{
 			$.each(data, function(i, val){
 				$('[data-id="'+i+'"]').parent().addClass("note_blue");
 				$('[data-id="'+i+'"]').attr("data-content", val);
+				$('[data-id="'+i+'"]').parent().append(` <span class="dot"></span> `);
 			});
 		}
 	});

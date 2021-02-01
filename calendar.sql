@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jan 18, 2021 at 10:53 AM
+-- Generation Time: Feb 01, 2021 at 09:51 AM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 8.0.0
 
@@ -18,41 +18,40 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `calendarDB`
+-- Database: `calendar`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `date_holiday`
+-- Table structure for table `holiday`
 --
 
-DROP TABLE IF EXISTS `date_holiday`;
-CREATE TABLE `date_holiday` (
+CREATE TABLE `holiday` (
   `id` int(10) UNSIGNED NOT NULL,
-  `date` int(11) NOT NULL,
+  `date_holiday` date NOT NULL,
   `note` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='hari libur nasional';
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `holiday__esp`
+-- Table structure for table `holiday_esp`
 --
 
-DROP TABLE IF EXISTS `holiday__esp`;
-CREATE TABLE `holiday__esp` (
+CREATE TABLE `holiday_esp` (
   `id` int(10) UNSIGNED NOT NULL,
-  `date` date NOT NULL,
+  `date_holiday` date NOT NULL,
   `note` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='hari libur esp';
 
 --
--- Dumping data for table `holiday__esp`
+-- Dumping data for table `holiday_esp`
 --
 
-INSERT INTO `holiday__esp` (`id`, `date`, `note`) VALUES
-(1, '2021-01-08', 'Hari Libur Pengganti Tahun Baru');
+INSERT INTO `holiday_esp` (`id`, `date_holiday`, `note`) VALUES
+(15, '2021-01-08', 'saka'),
+(16, '2021-01-15', 'SAkkaka');
 
 -- --------------------------------------------------------
 
@@ -60,11 +59,10 @@ INSERT INTO `holiday__esp` (`id`, `date`, `note`) VALUES
 -- Table structure for table `notes`
 --
 
-DROP TABLE IF EXISTS `notes`;
 CREATE TABLE `notes` (
   `id` int(10) UNSIGNED NOT NULL,
-  `id_user` int(11) UNSIGNED NOT NULL,
-  `date` date NOT NULL DEFAULT '0000-00-00',
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `date_holiday` date NOT NULL DEFAULT '0000-00-00' COMMENT 'Tanggal Libur notes',
   `note` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -72,8 +70,14 @@ CREATE TABLE `notes` (
 -- Dumping data for table `notes`
 --
 
-INSERT INTO `notes` (`id`, `id_user`, `date`, `note`) VALUES
-(1, 1, '2021-01-08', 'Sakit');
+INSERT INTO `notes` (`id`, `user_id`, `date_holiday`, `note`) VALUES
+(11, 1, '2021-01-07', 'jn'),
+(12, 1, '2021-01-07', 'jdsb'),
+(13, 1, '2021-01-06', 'ksnd'),
+(14, 1, '2021-01-06', 'ksnd'),
+(15, 1, '2021-01-05', 'Sakit'),
+(16, 1, '2021-11-02', 'Sakit'),
+(17, 1, '2021-11-23', 'Sakit');
 
 -- --------------------------------------------------------
 
@@ -81,12 +85,11 @@ INSERT INTO `notes` (`id`, `id_user`, `date`, `note`) VALUES
 -- Table structure for table `user`
 --
 
-DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(20) NOT NULL,
   `password` varchar(30) NOT NULL DEFAULT 'password',
-  `color` char(7) NOT NULL
+  `color` char(7) NOT NULL DEFAULT '#000000'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -94,22 +97,23 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `name`, `password`, `color`) VALUES
-(1, 'Rais', 'password', '#ff8300');
+(1, 'Rais', 'password', '#ff8300'),
+(2, 'Eko', 'password', '#000000');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `date_holiday`
+-- Indexes for table `holiday`
 --
-ALTER TABLE `date_holiday`
+ALTER TABLE `holiday`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `holiday__esp`
+-- Indexes for table `holiday_esp`
 --
-ALTER TABLE `holiday__esp`
+ALTER TABLE `holiday_esp`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -117,7 +121,7 @@ ALTER TABLE `holiday__esp`
 --
 ALTER TABLE `notes`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `id_user` (`id_user`);
+  ADD KEY `id_user` (`user_id`);
 
 --
 -- Indexes for table `user`
@@ -130,28 +134,28 @@ ALTER TABLE `user`
 --
 
 --
--- AUTO_INCREMENT for table `date_holiday`
+-- AUTO_INCREMENT for table `holiday`
 --
-ALTER TABLE `date_holiday`
+ALTER TABLE `holiday`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `holiday__esp`
+-- AUTO_INCREMENT for table `holiday_esp`
 --
-ALTER TABLE `holiday__esp`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+ALTER TABLE `holiday_esp`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `notes`
 --
 ALTER TABLE `notes`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
@@ -161,7 +165,7 @@ ALTER TABLE `user`
 -- Constraints for table `notes`
 --
 ALTER TABLE `notes`
-  ADD CONSTRAINT `id_user` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`);
+  ADD CONSTRAINT `id_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

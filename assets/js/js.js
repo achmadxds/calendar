@@ -1,10 +1,12 @@
 $(document).ready(function() {
+	GetFirstNationHoliday();
 	GetFirstNote();
 	GetFirstHesp();
 	
-	$(function () {
-		$('[data-toggle="popover"]').popover()
-	})
+	$('[data-toggle="popover"]').popover();
+	$('[data-booked="true"]').popover({
+		html: true,
+	});
 
 	$(".clickable").click(function(e) {
 		$('#addNotes').modal({
@@ -15,7 +17,6 @@ $(document).ready(function() {
 		$("#date").val(values);
 
 		ShowDataModalNote(values);
-		
 	});
 
 	$(".clickable").bind("contextmenu" ,function(e) {
@@ -133,15 +134,29 @@ function UpdateHolidayESP(id) {
 	});
 }
 
+function GetFirstNationHoliday() {
+	$.ajax({
+		type : "POST",
+		data : {task : "nationholiday"},
+		success : function(data) {
+			$.each(data, function(i, val){
+				$('[data-id = "'+i+'"]').parent().addClass("holiday");
+				$('[data-id = "'+i+'"]').attr("data-content", val);
+			});
+		}, error : function(textStatus){
+			console.log("Gagal dapet");
+		}
+	});
+}
+
 function GetFirstNote()	{
 	$.ajax({
 		type : "POST",
 		data : {task : "getFirstNote"},
 		success : function(data) {
 			$.each(data, function(i, val){
-				$('[data-id="'+i+'"]').parent().addClass("note_blue");
-				$('[data-id="'+i+'"]').attr("data-content", val);
-				$('[data-id="'+i+'"]').parent().append(` <span class="dot" data-toggle="popover" data-container="body" data-placement="top" data-html="true" data-trigger="hover" data-content="${val}" >  </span> `);
+				$('[data-id = "'+i+'"]').parent().addClass("note_blue");
+				$('[data-id = "'+i+'"]').attr("data-content", val);
 			});
 		}
 	});

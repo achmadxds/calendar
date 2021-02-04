@@ -57,6 +57,30 @@
 	$holiday     		   = [ '2021-01-01' => 'Tahun Baru Masehi 2021' ];
 	$users      		   = query('SELECT `id`, `name` FROM `user` WHERE 1');
 
+	// HOLIDAY
+	function GetFirstNationHoliday()
+	{
+		$holiday_value = file_get_contents('https://kalenderindonesia.com/api/APIHPnFCegVK2/libur/masehi/2021');
+		$holiday_value = json_decode($holiday_value, 1);
+		
+		$holidays      = [];
+		if(is_array($holiday_value) || is_object($holiday_value)){
+			foreach ($holiday_value as $value) {
+					$data = $value['holiday'];
+				foreach ($data as $value1) {
+					$data1 = $value1['data'];
+					foreach ($data1 as $hldys) {
+						$holidays[$hldys['date']] = $hldys['name'];
+					}
+				}
+			}
+		}
+		return $holidays;
+	}
+
+	$a = GetFirstNationHoliday();
+	pr($a, __FILE__.':'.__LINE__);
+
 	// HOLIDAY ESP
 	function AddHoliday() {
 		global $connect;
@@ -182,24 +206,31 @@
 
 	if(isset($_POST['task'])){
 		switch ($_POST['task']) {
-			
+
+			case 'nationholiday':
+			$getnationholiday = GetFirstNationHoliday();
+			$getnationholiday = json_encode($getnationholiday);
+			header('Content-Type: application/json');
+			echo $getnationholiday;
+			break;
+
 			//Notess
 			case 'notess':
 			AddNotes();
 			break;
 
 			case 'datess':
-			$getdateposts = GetDateNotes();
+			$getdateposts          = GetDateNotes();
 			$returnable['payload'] = $getdateposts;
-			$returnable = json_encode($returnable);
+			$returnable            = json_encode($returnable);
 			header('Content-Type: application/json');
 			echo $returnable;	
 			break;
 
 			case 'deleteNote':
 			$returnable = DeleteNotes();
-			header('Content-Type: application/json');
 			$returnable = json_encode($returnable);
+			header('Content-Type: application/json');
 			echo $returnable;
 			break;
 
@@ -220,9 +251,9 @@
 			break;
 
 			case 'showholiday':
-			$getdatepost = GetDateHesp();
+			$getdatepost           = GetDateHesp();
 			$returnablee['hadehh'] = $getdatepost;
-			$returnablee = json_encode($returnablee);
+			$returnablee           = json_encode($returnablee);
 			header('Content-Type: application/json');
 			echo $returnablee;
 			break;
@@ -236,8 +267,8 @@
 
 			case 'deleteESP':
 			$delESP = DeleteHesp();
-			header('Content-Type: application/json');
 			$delESP = json_encode($delESP);
+			header('Content-Type: application/json');
 			echo $delESP;
 			break;
 
@@ -300,17 +331,16 @@
 									}
 									foreach ($dates as $days_number => $date) {
 										$is_weekend                    = in_array($days_number, [0, 6]) ? 'weekend' : '';
-										$is_holiday                    = in_array($date, array_keys($holiday)) ? 1 : 0;
+										$is_holiday                    = !empty($holidays[$date]) ? 'holiday' : '';
 										$is_holiday_esp                = !empty($holiday_esp[$date]) ? ' note_red' : '';
-										$date_color                    = $is_holiday ? ' holiday' : ' ordinary';
 										$is_flag                       = !empty($notes[$date]) ? ' note_blue' : '';
 										$date_note                     = $is_flag ? ' data-toggle="popover" data-container="body" data-placement="top" data-html="true" data-trigger="hover" data-content="" data-id="" '
-										: ($is_holiday ? ' data-toggle = "popover" data-container="body" data-placement="top" data-html="true" data-trigger="hover" data-content="' . $holiday[$date] . '" data-id="" '
+										: ($is_holiday ? ' data-toggle = "popover" data-container="body" data-placement="top" data-html="true" data-trigger="hover" data-content="" data-id="" '
 											: ($is_holiday_esp ? ' data-toggle="popover" data-container="body" data-placement="top" data-html="true" data-trigger="hover" data-content="" data-id="" '
-												: ' data-toggle="popover" data-container="body" data-placement="top" data-html="true" data-trigger="hover" data-id="'.$date.'"'));
+												: ' data-toggle="popover" data-container="body" data-placement="top" data-html="true" data-trigger="hover" data-id="" '));
 												?>
 												<td class="<?php echo $is_weekend . $is_flag . $is_holiday_esp ?>">
-													<span class="clickable dates<?php echo $date_color ?>" <?php echo $date_note ?>> <?php echo date('j', strtotime($date)) ?> </span>
+													<span class="clickable dates" <?php echo $date_note ?>> <?php echo date('j', strtotime($date)) ?> </span>
 													<br>
 												</td>
 												<?php

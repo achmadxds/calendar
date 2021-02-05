@@ -54,7 +54,6 @@
 
 	$days_name   		   = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 	$months_name 		   = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-	$holiday     		   = [ '2021-01-01' => 'Tahun Baru Masehi 2021' ];
 	$users      		   = query('SELECT `id`, `name` FROM `user` WHERE 1');
 
 	// HOLIDAY
@@ -64,22 +63,23 @@
 		$holiday_value = json_decode($holiday_value, 1);
 		
 		$holidays      = [];
-		if(is_array($holiday_value) || is_object($holiday_value)){
-			foreach ($holiday_value as $value) {
-					$data = $value['holiday'];
-				foreach ($data as $value1) {
-					$data1 = $value1['data'];
-					foreach ($data1 as $hldys) {
+
+		foreach ($holiday_value as $value) {
+			foreach ($value['holiday'] as $value1) {
+				$data1 = $value1['data'];
+				foreach ($data1 as $hldys) {
+					if(array_key_exists("holiday", $holiday_value['data']))
 						$holidays[$hldys['date']] = $hldys['name'];
-					}
+					else
+						pr("debuger", __FILE__.':'.__LINE__);
 				}
 			}
 		}
+
 		return $holidays;
 	}
 
-	$a = GetFirstNationHoliday();
-	pr($a, __FILE__.':'.__LINE__);
+	pr(GetFirstNationHoliday());
 
 	// HOLIDAY ESP
 	function AddHoliday() {
@@ -118,11 +118,7 @@
 		global $connect;
 		$id    = $_POST['idDelesp'];
 		$query = 'DELETE FROM `holiday_esp` WHERE `id`='.$id.' ';
-		if(mysqli_query($connect, $query)){
-			return true;
-		}else {
-			return false;
-		}
+		mysqli_query($connect, $query);
 	}
 
 	function UpdateHesp() {
@@ -160,11 +156,7 @@
 		global $connect;
 		$date 			 = $_POST['idDel'];
 		$getdate 		 = 'DELETE FROM `notes` WHERE `id`='.$date.' ';
-		if(mysqli_query($connect, $getdate)){
-			return true;
-		}else {
-			return false;
-		}
+		mysqli_query($connect, $getdate);
 	}
 
 	function GetDateNotes(){
@@ -207,12 +199,12 @@
 	if(isset($_POST['task'])){
 		switch ($_POST['task']) {
 
-			case 'nationholiday':
-			$getnationholiday = GetFirstNationHoliday();
-			$getnationholiday = json_encode($getnationholiday);
-			header('Content-Type: application/json');
-			echo $getnationholiday;
-			break;
+			// case 'nationholiday':
+			// $getnationholiday = GetFirstNationHoliday();
+			// $getnationholiday = json_encode($getnationholiday);
+			// header('Content-Type: application/json');
+			// echo $getnationholiday;
+			// break;
 
 			//Notess
 			case 'notess':
@@ -331,17 +323,17 @@
 									}
 									foreach ($dates as $days_number => $date) {
 										$is_weekend                    = in_array($days_number, [0, 6]) ? 'weekend' : '';
-										$is_holiday                    = !empty($holidays[$date]) ? 'holiday' : '';
+										$is_holiday                    = !empty($holidays[$date]) ? ' holiday' : '';
 										$is_holiday_esp                = !empty($holiday_esp[$date]) ? ' note_red' : '';
 										$is_flag                       = !empty($notes[$date]) ? ' note_blue' : '';
 										$date_note                     = $is_flag ? ' data-toggle="popover" data-container="body" data-placement="top" data-html="true" data-trigger="hover" data-content="" data-id="" '
 										: ($is_holiday ? ' data-toggle = "popover" data-container="body" data-placement="top" data-html="true" data-trigger="hover" data-content="" data-id="" '
 											: ($is_holiday_esp ? ' data-toggle="popover" data-container="body" data-placement="top" data-html="true" data-trigger="hover" data-content="" data-id="" '
-												: ' data-toggle="popover" data-container="body" data-placement="top" data-html="true" data-trigger="hover" data-id="" '));
+												: ' data-toggle="popover" data-container="body" data-placement="top" data-html="true" data-trigger="hover" data-id="'.$date.'" '));
 												?>
 												<td class="<?php echo $is_weekend . $is_flag . $is_holiday_esp ?>">
 													<span class="clickable dates" <?php echo $date_note ?>> <?php echo date('j', strtotime($date)) ?> </span>
-													<br>
+													<br>	
 												</td>
 												<?php
 											}

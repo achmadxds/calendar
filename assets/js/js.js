@@ -71,10 +71,6 @@ function DeleteNote(id) {
 		success : function(data){
 			GetFirstNote();
 			ShowDataModalNote(values);
-			//Hanya Karena The Last cant gone from this freking code
-			// setTimeout(function () {
-			// 	history.go(0);
-			// }, 500);
 		}
 	});
 }
@@ -88,10 +84,6 @@ function DeleteHolidayESP(id) {
 		success : function(data){
 			GetFirstHesp();
 			ShowDataModalESP(values);
-			//Hanya Karena The Last cant gone from this freking code
-			// setTimeout(function () {
-			// 	history.go(0);
-			// }, 500);
 		}
 	});
 }
@@ -143,8 +135,7 @@ function GetFirstNationHoliday() {
 				$('[data-id = "'+i+'"]').parent().addClass("holiday");
 				$('[data-id = "'+i+'"]').attr("data-content", val);
 			});
-		}, error : function(textStatus){
-			console.log("Gagal dapet");
+			console.log(data);
 		}
 	});
 }
@@ -187,22 +178,18 @@ function ShowDataModalNote(values){
 					`
 					<div class="dropdown" id="group-${val['id']}">
 					<label id="namaorang"> ${val['name']} </label>
-
 					<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
 					<span class="caret"></span>
 					</button>
-
 					<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
 					<li role="presentation"><a tabindex="-1" onclick="DeleteNote(${val['id']})" >Delete</a></li>
 					<li role="presentation"><a tabindex="-1" onclick="ShowButton(${val['id']})">Update</a></li>
 					<input type="hidden" class="input-date" value="${val['date_holiday']}">
 					</ul>
-
 					<input type="text" class="form-control input-text" value="${val['note']}" readonly>
 					<div class="save-button" style="display : none">
 					<button type="button" class="btn btn-success updateNote" onclick="UpdateNotes(${val['id']})">Save</button>
 					</div>
-
 					</div>
 					<hr>
 					`
@@ -223,22 +210,18 @@ function ShowDataModalESP(values){
 				outerdiv.append(
 					`
 					<div class="dropdown" id="groups-${val['id']}">
-
 					<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
 					<span class="caret"></span>
 					</button>
-
 					<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
 					<li role="presentation"><a tabindex="-1" onclick="DeleteHolidayESP(${val['id']})" >Delete</a></li>
 					<li role="presentation"><a tabindex="-1" onclick="ShowButtons(${val['id']})">Update</a></li>
 					<input type="hidden" class="input-date" value="${val['date_holiday']}">
 					</ul>
-
 					<input type="text" class="form-control input-text" value="${val['note']}" readonly>
 					<div class="save-button" style="display : none">
 					<button type="button" class="btn btn-success updateESP" onclick="UpdateHolidayESP(${val['id']})">Save</button>
 					</div>
-
 					</div>
 					<hr>
 					`

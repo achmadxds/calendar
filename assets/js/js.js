@@ -62,6 +62,23 @@ $(document).ready(function() {
 	});
 });
 
+function Logeen() {
+	var usm  = $('#username').val();
+	var pswd = $('#password').val();
+
+	if(usm != "" && pswd != ""){
+		$.ajax({
+			type : "POST",
+			data : {task : "logeen", password : pswd, username : usm} , 
+			success : function(data){
+
+			}
+		});
+	} else {
+		alert('isi username / password terlebih dahulu');
+	}
+}
+
 function DeleteNote(id) {
 	var values = $('#group-' + id + ' .input-date').val();
 

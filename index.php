@@ -81,11 +81,9 @@ if(isset($_POST['login'])){
 			$_SESSION['nama']  = $username;
 		} else {
 			echo "<script> alert('salah password'); </script>";
-			return false;
 		}
 	} else {
 		echo "<script> alert('salah username'); </script>";
-		return false;
 	}
 }
 
@@ -103,8 +101,6 @@ function GetFirstNationHoliday()
 			foreach ($data1 as $hldys) {
 				if(array_key_exists("holiday", $holiday_value['data']))
 					$holidays[$hldys['date']] = $hldys['name'];
-				else
-					pr("debuger", __FILE__.':'.__LINE__);
 			}
 		}
 	}
@@ -171,12 +167,12 @@ function GetDateNotes(){
 if(isset($_POST['task'])){
 	switch ($_POST['task']) {
 
-			// case 'nationholiday':
-			// $getnationholiday = GetFirstNationHoliday();
-			// $getnationholiday = json_encode($getnationholiday);
-			// header('Content-Type: application/json');
-			// echo $getnationholiday;
-			// break;
+		case 'nationholiday':
+		$getnationholiday = GetFirstNationHoliday();
+		$getnationholiday = json_encode($getnationholiday);
+		header('Content-Type: application/json');
+		echo $getnationholiday;
+		break;
 
 		case 'datess':
 		$getdateposts          = GetDateNotes();

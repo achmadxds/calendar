@@ -152,7 +152,6 @@ function GetFirstNationHoliday() {
 				$('[data-id = "'+i+'"]').parent().addClass("holiday");
 				$('[data-id = "'+i+'"]').attr("data-content", val);
 			});
-			console.log(data);
 		}
 	});
 }
